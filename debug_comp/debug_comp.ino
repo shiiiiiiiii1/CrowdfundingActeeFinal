@@ -75,6 +75,8 @@ void setup() {
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
   pixels.begin();
   pixels.setBrightness(40);
 }
