@@ -1,16 +1,17 @@
+/* デバッグ内容
+  - 加速度センサが正常にシリアルモニタに表示される。
+  - 加速度センサを回転させるとそれに比例してシリアルモニタの値も変化する。
+*/
+
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   #include "Wire.h"
 #endif
-#include <Adafruit_NeoPixel.h>
 
-#define PIN 7                 // フルカラーLEDのPIN番号
-#define NUMPIXELS 6           // LEDの個数
 #define INTERRUPT_PIN 2       // use pin 2 on Arduino Uno & most boards
 
 MPU6050 mpu;
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 bool dmpReady = false;        // set true if DMP init was successful
 uint8_t mpuIntStatus;         // holds actual interrupt status byte from MPU
@@ -30,6 +31,8 @@ void dmpDataReady() {
 
 
 void setup() {
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   Wire.begin();
   Wire.setClock(400000); // 400kHz I2C clock. Comment this line if having compilation difficulties
@@ -75,10 +78,6 @@ void setup() {
     Serial.print(devStatus);
     Serial.println(F(")"));
   }
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);
-  pixels.begin();
-  pixels.setBrightness(40);
 }
 
 void loop() {
@@ -103,10 +102,4 @@ void loop() {
   Serial.print("  pitch:"); Serial.print(ypr[1] * 180 / M_PI);
   Serial.print("  roll:"); Serial.print(ypr[2] * 180 / M_PI);
   Serial.print("  gyroZ:"); Serial.println(gyro.x);
-
-  for (int i = 0; i < NUMPIXELS; i++) {
-    pixels.setPixelColor(i, 255, 255, 255);
-  }
-  pixels.show();
-  Serial.println("LED Brightness");
 }
