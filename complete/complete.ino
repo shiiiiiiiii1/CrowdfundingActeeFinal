@@ -182,6 +182,8 @@ void loop() {
  @ 戻り値：なし
 */
 void setupActee() {
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
   flying = false;
   rotation = 0;
   color_have = 0;
