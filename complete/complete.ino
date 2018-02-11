@@ -494,6 +494,7 @@ char effectSelect(char before, char now) {
   }
   if (color_count == 2) {
     color_count = 0;
+    color_fly = 0;
     return -1 * now;
   }
   return 0;
