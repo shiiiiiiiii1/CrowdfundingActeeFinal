@@ -30,6 +30,7 @@ float ypr[3];                 // [yaw, pitch, roll]   yaw/pitch/roll container a
 // 色に関する変数
 char color_have;              // 持ってる時の色
 char color_fly;               // 飛んでる時の色
+char color_fly_storage;
 char color_count;             // 連続で何回同じ色が出せたか
 // 回転情報に関する変数
 char rotation;                // 回転方向を格納
@@ -138,6 +139,7 @@ void loop() {
     int gyro_z = gyro.z;
     char color_fly_pre = color_fly;
     color_fly = colorSelect(abs(gyro_z), ave);
+    color_fly_storage = color_fly;
     // 何回連続で投げられたかのカウントで「color_have」に代入。
     color_have = effectSelect(color_fly_pre, color_fly);
     changeColor(color_fly, 0);
@@ -147,7 +149,7 @@ void loop() {
 
   /* ----- 飛んでいる時の処理 ----- */
   if (flew && flying) {
-    changeColor(color_fly, 0);
+    changeColor(color_fly_storage, 0);
   }
 
   /* ----- キャッチした時の処理 ----- */
@@ -188,6 +190,7 @@ void setupActee() {
   rotation = 0;
   color_have = 0;
   color_fly = 0;
+  color_fly_storage = 0;
   color_count = 0;
   loop_count = 0;
   pixels.begin();
