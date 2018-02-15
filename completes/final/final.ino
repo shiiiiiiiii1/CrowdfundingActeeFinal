@@ -65,10 +65,13 @@ void setup() {
 
   devStatus = mpu.dmpInitialize();
 
-  mpu.setXGyroOffset(220);
-  mpu.setYGyroOffset(76);
-  mpu.setZGyroOffset(-85);
-  mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+/* ------------------------------------------------------------------------------------------------------------------------------------ */
+/* paste text */
+  mpu.setXGyroOffset(164);
+  mpu.setYGyroOffset(-32);
+  mpu.setZGyroOffset(-86);
+  mpu.setZAccelOffset(14213);
+/* ------------------------------------------------------------------------------------------------------------------------------------ */
 
   if (devStatus == 0) {
     mpu.setDMPEnabled(true);
@@ -112,11 +115,13 @@ void loop() {
     slope[i] = slope[i-1];
   }
   slope[0] = sqrt(pow(pitch, 2) + pow(roll, 2));
+  int gyro_z = gyro.z;
+  mpu.resetFIFO();
 
   char rotation_state = 0;
-  if (gyro.z < 0) {          // 時計回り
+  if (gyro_z < 0) {          // 時計回り
     rotation_state = -1;
-  } else if (0 < gyro.z) {   // 反時計回り
+  } else if (0 < gyro_z) {   // 反時計回り
     rotation_state = 1;
   }
   bool flew = flying;
@@ -136,14 +141,13 @@ void loop() {
     }
     float ave = sum / ARRAY_LENGTH;
     // 回転速度とブレ具合の測定。「color_fly」に代入。
-    int gyro_z = gyro.z;
     char color_fly_pre = color_fly;
     color_fly = colorSelect(abs(gyro_z), ave);
     color_fly_storage = color_fly;
     // 何回連続で投げられたかのカウントで「color_have」に代入。
     color_have = effectSelect(color_fly_pre, color_fly);
-    changeColor(color_fly, 0);
-    // Serial.print("throw -------------------- GyroZ"); Serial.print(abs(gyro.z)); Serial.print("  /  SlopeAverage:"); Serial.print(ave); Serial.println(" --------------------");
+//    changeColor(color_fly, 0);
+    // Serial.print("throw -------------------- GyroZ"); Serial.print(abs(gyro_z)); Serial.print("  /  SlopeAverage:"); Serial.print(ave); Serial.println(" --------------------");
     // Serial.print("having led : "); Serial.print(int(color_have)); Serial.print("\t flying led : "); Serial.println(int(color_fly));
   }
 
@@ -161,7 +165,7 @@ void loop() {
       loop_count = 1;
     }
     loop_count = changeColor(color_have, loop_count);
-    // Serial.println("catch -------------------- ");
+    //Serial.println("catch -------------------- ");
   }
 
 }
@@ -313,27 +317,27 @@ int changeColor(char color_type, int _loop_count) {
         pixels.setPixelColor(i, 100, 100, 100);
       }
       break;
-    case 1:
+    case 1:   // red
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 255, 50, 60);
       }
       break;
-    case 2:
+    case 2:   // orange
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 255, 80, 0);
       }
       break;
-    case 3:
+    case 3:   // yellow
       for (int i = 0; i < NUMPIXELS; i++) {
-        pixels.setPixelColor(i, 251, 211, 28);
+        pixels.setPixelColor(i, 255, 225, 0);
       }
       break;
-    case 4:
+    case 4:   // green
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 56, 151, 35);
       }
       break;
-    case 5:
+    case 5:   // blue
       for (int i = 0; i < NUMPIXELS; i++) {
         pixels.setPixelColor(i, 10, 255, 255);
       }
@@ -383,14 +387,14 @@ int changeColor(char color_type, int _loop_count) {
         if (i != j) {
           pixels.setPixelColor(i, 0, 0, 0);
         } else {
-          pixels.setPixelColor(i, 255, 255, 0);
+          pixels.setPixelColor(i, 255, 225, 0);
         }
       }
       break;
     case -4:   // ------------------------------ 緑3連続 ------------------------------
       for (int i = 0; i < NUMPIXELS; i++) {
         if (i < int(count_con)) {
-          pixels.setPixelColor(i, 0, 255, 0);
+          pixels.setPixelColor(i, 56, 151, 35);
         } else {
           pixels.setPixelColor(i, 0, 0, 0);
         }
