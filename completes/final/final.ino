@@ -9,7 +9,7 @@
 /* 定数宣言 */
 #define PIN 7                 // フルカラーLEDのPIN番号
 #define NUMPIXELS 6           // LEDの個数
-#define ARRAY_LENGTH 100      // いくつ分のデータを取得するか
+#define ARRAY_LENGTH 30      // いくつ分のデータを取得するか
 #define INTERRUPT_PIN 2       // use pin 2 on Arduino Uno & most boards
 
 /* 加速度・LEDのインスタンス生成 */
@@ -30,7 +30,7 @@ float ypr[3];                 // [yaw, pitch, roll]   yaw/pitch/roll container a
 // 色に関する変数
 char color_have;              // 持ってる時の色
 char color_fly;               // 飛んでる時の色
-char color_fly_storage;
+//char color_fly_storage;
 char color_count;             // 連続で何回同じ色が出せたか
 // 回転情報に関する変数
 char rotation;                // 回転方向を格納
@@ -143,18 +143,18 @@ void loop() {
     // 回転速度とブレ具合の測定。「color_fly」に代入。
     char color_fly_pre = color_fly;
     color_fly = colorSelect(abs(gyro_z), ave);
-    color_fly_storage = color_fly;
+//    color_fly_storage = color_fly;
     // 何回連続で投げられたかのカウントで「color_have」に代入。
+    changeColor(color_fly, 0);
     color_have = effectSelect(color_fly_pre, color_fly);
-//    changeColor(color_fly, 0);
     // Serial.print("throw -------------------- GyroZ"); Serial.print(abs(gyro_z)); Serial.print("  /  SlopeAverage:"); Serial.print(ave); Serial.println(" --------------------");
     // Serial.print("having led : "); Serial.print(int(color_have)); Serial.print("\t flying led : "); Serial.println(int(color_fly));
   }
 
   /* ----- 飛んでいる時の処理 ----- */
-  if (flew && flying) {
-    changeColor(color_fly_storage, 0);
-  }
+//  if (flew && flying) {
+//    changeColor(color_fly_storage, 0);
+//  }
 
   /* ----- キャッチした時の処理 ----- */
   mpu.resetFIFO();
@@ -194,7 +194,7 @@ void setupActee() {
   rotation = 0;
   color_have = 0;
   color_fly = 0;
-  color_fly_storage = 0;
+//  color_fly_storage = 0;
   color_count = 0;
   loop_count = 0;
   pixels.begin();
