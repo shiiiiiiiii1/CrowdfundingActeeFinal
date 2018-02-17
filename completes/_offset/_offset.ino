@@ -18,11 +18,6 @@
 MPU6050 accelgyro;
 //MPU6050 accelgyro(0x69); // <-- use for AD0 high
 
-// EEPROMに書き込むための処理
-#include <EEPROM.h>
-#include <rom_adv.h>
-rom_adv rom(1023);
-
 
 const char LBRACKET = '[';
 const char RBRACKET = ']';
